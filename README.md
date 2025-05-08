@@ -1,6 +1,6 @@
 # Pizza Clicker!
 
-Created by dsullivan-afk and climatecoding101.
+Created by dsullivan-afk and ClimateCoder101.
 
 A totally normal clicker game where you can click to make pizzas and have fun!
 
