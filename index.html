@@ -207,6 +207,9 @@
     </style>
 </head>
 <body>
+    <nav style="background: #d32f2f; padding: 10px; text-align: center;">
+        <a href="Pizza Builder.html" style="color: #fff; text-decoration: none; font-size: 1.2em; margin: 0 15px;">Pizza Builder</a>
+    </nav>
     <div id="game-content">
         <h1 id="title">Pizza Clicker 🍕</h1>
         <div id="pizza-container">
@@ -234,6 +237,11 @@
             <div id="upgrades"></div>
         </div>
     </div>
+    <footer>
+        <p style="font-size: 0.8em; color: #fff; background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 10px; margin-top: 20px;">
+            By playing this game, you agree to our <a href="#" style="color: #ffd700; text-decoration: underline;">Terms and Conditions</a>.
+        </p>
+    </footer>
     <div id="code-entry">
         <div>
             <h2>Enter the Secret Code</h2>
@@ -250,7 +258,7 @@
             <h2>Sign Up to PIZZA +!</h2>
             <p>Welcome to the secret room!</p>
             <p>Sign up to unlock exclusive features and rewards!</p>
-            <form id="signup-form">
+            <form id="signup-form" action="save_to_database.php" method="POST">
                 <div>
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required>
