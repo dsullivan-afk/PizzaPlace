@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza Builder Mini-Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f8e8c1;
+    }
+    h1 {
+      color: #d35400;
+    }
+    #game-area {
+      margin: 20px auto;
+      width: 300px;
+      height: 300px;
+      position: relative;
+      border: 2px solid #d35400;
+      border-radius: 50%;
+      background-color: #f5d6a9;
+    }
+    .topping {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      cursor: grab;
+    }
+    .pepperoni {
+      background-color: #d35400;
+      border-radius: 50%;
+    }
+    .olive {
+      background-color: #34495e;
+      border-radius: 50%;
+    }
+    .mushroom {
+      background-color: #ecf0f1;
+      border-radius: 50%;
+    }
+    #topping-container {
+      margin-top: 20px;
+    }
+    .dragging {
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pizza Builder</h1>
+  <p>Drag and drop the toppings onto the pizza!</p>
+  <div id="game-area"></div>
+  <div id="topping-container">
+    <div class="topping pepperoni" draggable="true" style="top: 0; left: 0;"></div>
+    <div class="topping olive" draggable="true" style="top: 0; left: 50px;"></div>
+    <div class="topping mushroom" draggable="true" style="top: 0; left: 100px;"></div>
+  </div>
+  <script>
+    const toppings = document.querySelectorAll('.topping');
+    const gameArea = document.getElementById('game-area');
+
+    toppings.forEach(topping => {
+      topping.addEventListener('dragstart', dragStart);
+      topping.addEventListener('dragend', dragEnd);
+    });
+
+    gameArea.addEventListener('dragover', dragOver);
+    gameArea.addEventListener('drop', dragDrop);
+
+    function dragStart(e) {
+      e.dataTransfer.setData('text/plain', e.target.className);
+      e.target.classList.add('dragging');
+    }
+
+    function dragEnd(e) {
+      e.target.classList.remove('dragging');
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+    }
+
+    function dragDrop(e) {
+      e.preventDefault();
+      const className = e.dataTransfer.getData('text');
+      const newTopping = document.createElement('div');
+      newTopping.className = className;
+      newTopping.style.position = 'absolute';
+      newTopping.style.left = `${e.offsetX - 20}px`;
+      newTopping.style.top = `${e.offsetY - 20}px`;
+      gameArea.appendChild(newTopping);
+    }
+  </script>
+</body>
+</html>
