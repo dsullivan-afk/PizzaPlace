@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Clicker</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard', sans-serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #ff6b6b, #ffe066);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+        h1 {
+            font-size: 3em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        h1:hover {
+            transform: scale(1.05);
+        }
+        #pizza-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #pizza {
+            width: 250px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+        }
+        #pizza:hover {
+            transform: scale(1.15) rotate(5deg);
+        }
+        #pizza:active {
+            transform: scale(0.95);
+        }
+        #pizzaCount, #pps {
+            font-size: 1.5em;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px;
+        }
+        #stats {
+            margin: 20px 0;
+            font-size: 1.3em;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        h2 {
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        #upgrades-container {
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background: linear-gradient(to bottom, #ffd700, #ffa500);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        #upgrades-container.open {
+            transform: translateX(0);
+        }
+        #upgrades {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .upgrade {
+            background: linear-gradient(to bottom, #ffec80, #ffbf00);
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fff;
+        }
+        .upgrade:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(to bottom, #fff9a6, #ffd54f);
+        }
+        .upgrade.disabled {
+            background: linear-gradient(to bottom, #ccc, #aaa);
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+        .upgrade strong {
+            font-size: 1.2em;
+            color: #d32f2f;
+        }
+        #toggle-upgrades {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.2s;
+            z-index: 1000;
+        }
+        #toggle-upgrades:hover {
+            background: #b71c1c;
+        }
+        #secret-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            z-index: 2000;
+        }
+        #secret-page.active {
+            display: flex;
+        }
+        @media (max-width: 600px) {
+            #pizza {
+                width: 200px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            #upgrades-container {
+                width: 250px;
+            }
+            .upgrade {
+                padding: 10px;
+            }
+            #toggle-upgrades {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-content">
+        <h1 id="title">Pizza Clicker 🍕</h1>
+        <div id="pizza-container">
+            <svg id="pizza" viewBox="0 0 100 100" width="250" height="250">
+                <!-- Crust -->
+                <circle cx="50" cy="50" r="45" fill="#d2a679" stroke="#8b5e3c" stroke-width="4"/>
+                <!-- Sauce -->
+                <circle cx="50" cy="50" r="40" fill="#ff6347"/>
+                <!-- Cheese -->
+                <circle cx="50" cy="50" r="38" fill="#ffd700"/>
+                <!-- Pepperoni -->
+                <circle cx="40" cy="40" r="5" fill="#a52a2a"/>
+                <circle cx="60" cy="40" r="5" fill="#a52a2a"/>
+                <circle cx="50" cy="50" r="5" fill="#a52a2a"/>
+                <circle cx="40" cy="60" r="5" fill="#a52a2a"/>
+                <circle cx="60" cy="60" r="5" fill="#a52a2a"/>
+            </svg>
+        </div>
+        <p id="pizzaCount">Pizzas: 0</p>
+        <p id="pps">Pizzas per second: 0</p>
+        <div id="stats"></div>
+        <button id="toggle-upgrades">Show Upgrades</button>
+        <div id="upgrades-container">
+            <h2>Upgrades</h2>
+            <div id="upgrades"></div>
+        </div>
+    </div>
+    <div id="secret-page">
+        Secret Page Unlocked
+    </div>
+
+    <script>
+        let pizzas = 0;
+        let pizzasPerSecond = 0;
+        let clickPower = 1;
+        let secretUnlocked = false;
+        let titleClicks = [];
+
+        const upgrades = [
+            { name: "Extra Cheese", cost: 10, pps: 0.1, count: 0, description: "Adds 0.1 pizzas per second" },
+            { name: "Pepperoni Power", cost: 50, pps: 0.5, count: 0, description: "Adds 0.5 pizzas per second" },
+            { name: "Oven Upgrade", cost: 100, pps: 1, count: 0, description: "Adds 1 pizza per second" },
+            { name: "Pizza Chef", cost: 500, pps: 5, count: 0, description: "Adds 5 pizzas per second" },
+            { name: "Click Boost", cost: 200, click: 1, count: 0, description: "Increases click power by 1" }
+        ];
+
+        const pizzaImg = document.getElementById('pizza');
+        const title = document.getElementById('title');
+        const pizzaCount = document.getElementById('pizzaCount');
+        const ppsDisplay = document.getElementById('pps');
+        const upgradesDiv = document.getElementById('upgrades');
+        const upgradesContainer = document.getElementById('upgrades-container');
+        const toggleUpgrades = document.getElementById('toggle-upgrades');
+        const statsDiv = document.getElementById('stats');
+        const secretPage = document.getElementById('secret-page');
+        const gameContent = document.getElementById('game-content');
+
+        function updateDisplay() {
+            pizzaCount.textContent = `Pizzas: ${Math.floor(pizzas)}`;
+            ppsDisplay.textContent = `Pizzas per second: ${pizzasPerSecond.toFixed(1)}`;
+            statsDiv.textContent = `Click Power: ${clickPower}`;
+            renderUpgrades();
+        }
+
+        function renderUpgrades() {
+            upgradesDiv.innerHTML = '';
+            upgrades.forEach((upgrade, index) => {
+                const canAfford = pizzas >= upgrade.cost;
+                const div = document.createElement('div');
+                div.className = `upgrade ${canAfford ? '' : 'disabled'}`;
+                div.innerHTML = `
+                    <strong>${upgrade.name}</strong><br>
+                    Cost: ${upgrade.cost} pizzas<br>
+                    ${upgrade.description}<br>
+                    Owned: ${upgrade.count}
+                `;
+                if (canAfford) {
+                    div.onclick = () => buyUpgrade(index);
+                }
+                upgradesDiv.appendChild(div);
+            });
+        }
+
+        function buyUpgrade(index) {
+            const upgrade = upgrades[index];
+            if (pizzas >= upgrade.cost) {
+                pizzas -= upgrade.cost;
+                upgrade.count++;
+                if (upgrade.pps) {
+                    pizzasPerSecond += upgrade.pps;
+                }
+                if (upgrade.click) {
+                    clickPower += upgrade.click;
+                }
+                upgrade.cost = Math.round(upgrade.cost * 1.15);
+                updateDisplay();
+            }
+        }
+
+        function checkSecretCondition() {
+            if (secretUnlocked) return;
+
+            const currentTime = Date.now();
+            titleClicks = titleClicks.filter(click => currentTime - click <= 5000);
+            titleClicks.push(currentTime);
+
+            if (titleClicks.length >= 10) {
+                secretUnlocked = true;
+                secretPage.classList.add('active');
+                gameContent.style.display = 'none';
+            }
+        }
+
+        pizzaImg.addEventListener('click', () => {
+            pizzas += clickPower;
+            updateDisplay();
+        });
+
+        title.addEventListener('click', () => {
+            checkSecretCondition();
+        });
+
+        toggleUpgrades.addEventListener('click', () => {
+            const isOpen = upgradesContainer.classList.toggle('open');
+            toggleUpgrades.textContent = isOpen ? 'Hide Upgrades' : 'Show Upgrades';
+        });
+
+        setInterval(() => {
+            pizzas += pizzasPerSecond / 10;
+            updateDisplay();
+        }, 100);
+
+        updateDisplay();
+    </script>
+</body>
+</html>
