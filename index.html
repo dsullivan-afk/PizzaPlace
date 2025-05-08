@@ -134,7 +134,7 @@
         #toggle-upgrades:hover {
             background: #b71c1c;
         }
-        #secret-page {
+        #secret-page, #code-entry {
             display: none;
             position: fixed;
             top: 0;
@@ -145,11 +145,42 @@
             color: #fff;
             justify-content: center;
             align-items: center;
-            font-size: 2em;
+            font-size: 1.5em;
             z-index: 2000;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
-        #secret-page.active {
+        #secret-page.active, #code-entry.active {
             display: flex;
+        }
+        #code-entry input {
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: none;
+            margin: 10px;
+            width: 80%;
+            max-width: 400px;
+        }
+        #code-entry button, #secret-page button {
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px;
+            transition: background 0.2s;
+        }
+        #code-entry button:hover, #secret-page button:hover {
+            background: #b71c1c;
+        }
+        #code-error {
+            color: #ff6b6b;
+            font-size: 1em;
+            margin-top: 10px;
         }
         @media (max-width: 600px) {
             #pizza {
@@ -167,6 +198,10 @@
             #toggle-upgrades {
                 padding: 8px 15px;
                 font-size: 0.9em;
+            }
+            #code-entry input {
+                font-size: 0.9em;
+                width: 90%;
             }
         }
     </style>
@@ -199,8 +234,25 @@
             <div id="upgrades"></div>
         </div>
     </div>
+    <div id="code-entry">
+        <div>
+            <h2>Enter the Secret Code</h2>
+            <p>Input the code to access the secret room.</p>
+            <input type="text" id="code-input" placeholder="Enter code here">
+            <div>
+                <button id="submit-code">Submit</button>
+                <button id="cancel-code">Back to Game</button>
+            </div>
+            <p id="code-error"></p>
+        </div>
+    </div>
     <div id="secret-page">
-        The following content is currently unavalble, as you don't have the correct security passes.
+        <div>
+            <h2>Secret Room Unlocked!</h2>
+            <p>Welcome to the secret room! You've earned 1000 bonus pizzas!</p>
+            <p>The content is now available, as you have the correct security pass.</p>
+            <button id="return-button">Back to Game</button>
+        </div>
     </div>
 
     <script>
@@ -209,6 +261,7 @@
         let clickPower = 1;
         let secretUnlocked = false;
         let titleClicks = [];
+        const SECRET_CODE = "5437652385726394582634987523649582";
 
         const upgrades = [
             { name: "Extra Cheese", cost: 10, pps: 0.1, count: 0, description: "Adds 0.1 pizzas per second" },
@@ -227,6 +280,9 @@
         const toggleUpgrades = document.getElementById('toggle-upgrades');
         const statsDiv = document.getElementById('stats');
         const secretPage = document.getElementById('secret-page');
+        const codeEntry = document.getElementById('code-entry');
+        const codeInput = document.getElementById('code-input');
+        const codeError = document.getElementById('code-error');
         const gameContent = document.getElementById('game-content');
 
         function updateDisplay() {
@@ -279,9 +335,26 @@
             titleClicks.push(currentTime);
 
             if (titleClicks.length >= 10) {
-                secretUnlocked = true;
-                secretPage.classList.add('active');
+                codeEntry.classList.add('active');
                 gameContent.style.display = 'none';
+                codeInput.value = '';
+                codeError.textContent = '';
+                codeInput.focus();
+            }
+        }
+
+        function handleCodeSubmit() {
+            const enteredCode = codeInput.value.trim();
+            if (enteredCode === SECRET_CODE) {
+                secretUnlocked = true;
+                codeEntry.classList.remove('active');
+                secretPage.classList.add('active');
+                pizzas += 1000; // Bonus reward
+                updateDisplay();
+            } else {
+                codeError.textContent = 'Incorrect code. Try again or return to the game.';
+                codeInput.value = '';
+                codeInput.focus();
             }
         }
 
@@ -297,6 +370,25 @@
         toggleUpgrades.addEventListener('click', () => {
             const isOpen = upgradesContainer.classList.toggle('open');
             toggleUpgrades.textContent = isOpen ? 'Hide Upgrades' : 'Show Upgrades';
+        });
+
+        document.getElementById('submit-code').addEventListener('click', handleCodeSubmit);
+
+        document.getElementById('cancel-code').addEventListener('click', () => {
+            codeEntry.classList.remove('active');
+            gameContent.style.display = 'block';
+            titleClicks = []; // Reset clicks to allow retry
+        });
+
+        document.getElementById('return-button').addEventListener('click', () => {
+            secretPage.classList.remove('active');
+            gameContent.style.display = 'block';
+        });
+
+        codeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleCodeSubmit();
+            }
         });
 
         setInterval(() => {
