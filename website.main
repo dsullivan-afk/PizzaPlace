@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Party</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        header {
+            background-color: #ff6347;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+        nav {
+            background-color: #333;
+            padding: 1em;
+        }
+        nav a {
+            color: white;
+            margin: 0 1em;
+            text-decoration: none;
+        }
+        nav a:hover {
+            color: #ff6347;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .recipe, .game, .recipe-details {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .recipe h3, .game h3, .recipe-details h3 {
+            color: #ff6347;
+        }
+        canvas {
+            border: 2px solid #333;
+            display: block;
+            margin: 20px auto;
+        }
+        button {
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #e5533d;
+        }
+        .recipe-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .recipe {
+            flex: 1 1 300px;
+            text-align: center;
+        }
+        .recipe-details, .tab-content {
+            display: none;
+        }
+        .recipe-details.active, .tab-content.active {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .tab-button:hover {
+            background-color: #ff6347;
+        }
+        .tab-button.active {
+            background-color: #ff6347;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pizza Party</h1>
+        <p>Recipes and Fun Games!</p>
+    </header>
+    <nav>
+        <a href="#recipes">Recipes</a>
+        <a href="#games">Games</a>
+    </nav>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('recipes-tab')">Recipes</button>
+            <button class="tab-button" onclick="showTab('games-tab')">Games</button>
+        </div>
+        <section id="recipes-tab" class="tab-content active">
+            <h2>Pizza Recipes</h2>
+            <div class="recipe-list">
+                <div class="recipe">
+                    <h3>Classic Margherita Pizza</h3>
+                    <button onclick="showRecipe('margherita')">See Recipe</button>
+                </div>
+                <div class="recipe">
+                    <h3>Pepperoni Pizza</h3>
+                    <button onclick="showRecipe('pepperoni')">See Recipe</button>
+                </div>
+                <div class="recipe">
+                    <h3>Veggie Supreme Pizza</h3>
+                    <button onclick="showRecipe('veggie')">See Recipe</button>
+                </div>
+                <div class="recipe">
+                    <h3>BBQ Chicken Pizza</h3>
+                    <button onclick="showRecipe('bbq-chicken')">See Recipe</button>
+                </div>
+            </div>
+            <div id="margherita" class="recipe-details">
+                <h3>Classic Margherita Pizza</h3>
+                <p><strong>Ingredients:</strong></p>
+                <ul>
+                    <li>1 pizza dough (store-bought or homemade)</li>
+                    <li>1/2 cup tomato sauce</li>
+                    <li>8 oz fresh mozzarella, sliced</li>
+                    <li>Fresh basil leaves</li>
+                    <li>2 tbsp olive oil</li>
+                    <li>Salt and pepper to taste</li>
+                </ul>
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                    <li>Preheat oven to 475°F (245°C).</li>
+                    <li>Roll out dough on a floured surface to desired thickness.</li>
+                    <li>Spread tomato sauce evenly over dough.</li>
+                    <li>Place mozzarella slices and basil leaves on top.</li>
+                    <li>Drizzle with olive oil, season with salt and pepper.</li>
+                    <li>Bake for 12-15 minutes until crust is golden.</li>
+                    <li>Slice and serve hot!</li>
+                </ol>
+                <button onclick="backToList()">Back to Recipes</button>
+            </div>
+            <div id="pepperoni" class="recipe-details">
+                <h3>Pepperoni Pizza</h3>
+                <p><strong>Ingredients:</strong></p>
+                <ul>
+                    <li>1 pizza dough</li>
+                    <li>1/2 cup tomato sauce</li>
+                    <li>1 cup shredded mozzarella</li>
+                    <li>20-30 pepperoni slices</li>
+                    <li>1 tsp oregano</li>
+                    <li>2 tbsp olive oil</li>
+                </ul>
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                    <li>Preheat oven to 475°F (245°C).</li>
+                    <li>Roll out dough and place on a baking sheet.</li>
+                    <li>Spread sauce, sprinkle mozzarella, and arrange pepperoni.</li>
+                    <li>Sprinkle oregano and drizzle with olive oil.</li>
+                    <li>Bake for 12-15 minutes until cheese is bubbly.</li>
+                    <li>Let cool slightly, slice, and enjoy!</li>
+                </ol>
+                <button onclick="backToList()">Back to Recipes</button>
+            </div>
+            <div id="veggie" class="recipe-details">
+                <h3>Veggie Supreme Pizza</h3>
+                <p><strong>Ingredients:</strong></p>
+                <ul>
+                    <li>1 pizza dough</li>
+                    <li>1/2 cup tomato sauce</li>
+                    <li>1 cup shredded mozzarella</li>
+                    <li>1/2 cup sliced bell peppers (red and green)</li>
+                    <li>1/2 cup sliced mushrooms</li>
+                    <li>1/4 cup sliced red onions</li>
+                    <li>1/4 cup black olives</li>
+                    <li>1 tsp Italian seasoning</li>
+                    <li>2 tbsp olive oil</li>
+                </ul>
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                    <li>Preheat oven to 475°F (245°C).</li>
+                    <li>Roll out dough and place on a baking sheet.</li>
+                    <li>Spread sauce and sprinkle mozzarella.</li>
+                    <li>Evenly distribute bell peppers, mushrooms, onions, and olives.</li>
+                    <li>Sprinkle Italian seasoning and drizzle with olive oil.</li>
+                    <li>Bake for 12-15 minutes until crust is golden and cheese is melted.</li>
+                    <li>Slice and serve!</li>
+                </ol>
+                <button onclick="backToList()">Back to Recipes</button>
+            </div>
+            <div id="bbq-chicken" class="recipe-details">
+                <h3>BBQ Chicken Pizza</h3>
+                <p><strong>Ingredients:</strong></p>
+                <ul>
+                    <li>1 pizza dough</li>
+                    <li>1/2 cup BBQ sauce</li>
+                    <li>1 cup shredded mozzarella</li>
+                    <li>1 cup cooked chicken, shredded</li>
+                    <li>1/4 cup red onions, thinly sliced</li>
+                    <li>2 tbsp cilantro, chopped</li>
+                    <li>2 tbsp olive oil</li>
+                </ul>
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                    <li>Preheat oven to 475°F (245°C).</li>
+                    <li>Roll out dough and place on a baking sheet.</li>
+                    <li>Spread BBQ sauce over dough.</li>
+                    <li>Sprinkle mozzarella, then add chicken and red onions.</li>
+                    <li>Drizzle with olive oil.</li>
+                    <li>Bake for 12-15 minutes until crust is crispy.</li>
+                    <li>Top with cilantro, slice, and serve!</li>
+                </ol>
+                <button onclick="backToList()">Back to Recipes</button>
+            </div>
+        </section>
+        <section id="games-tab" class="tab-content">
+            <h2>Pizza Games</h2>
+            <div class="game">
+                <h3>Pizza Catcher</h3>
+                <p>Catch the falling pizzas with your tray! Use arrow keys to move.</p>
+                <div id="catcherCanvas"></div>
+                <button onclick="startCatcherGame()">Start Game</button>
+            </div>
+            <div class="game">
+                <h3>Pizza Memory Match</h3>
+                <p>Flip cards to find matching pizza toppings! Click to flip cards.</p>
+                <div id="memoryCanvas"></div>
+                <button onclick="startMemoryGame()">Start Game</button>
+            </div>
+            <div class="game">
+                <h3>Pizza Toss</h3>
+                <p>Toss the pizza dough to make it larger without tearing it! Press spacebar to toss.</p>
+                <div id="tossCanvas"></div>
+                <button onclick="startTossGame()">Start Game</button>
+            </div>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
+            if (tabId === 'recipes-tab') {
+                backToList();
+            }
+        }
+
+        function showRecipe(recipeId) {
+            document.querySelector('.recipe-list').style.display = 'none';
+            document.querySelectorAll('.recipe-details').forEach(el => el.style.display = 'none');
+            document.getElementById(recipeId).style.display = 'block';
+        }
+
+        function backToList() {
+            document.querySelectorAll('.recipe-details').forEach(el => el.style.display = 'none');
+            document.querySelector('.recipe-list').style.display = 'flex';
+        }
+
+        // Pizza Catcher Game
+        let catcherInstance;
+        let startCatcherGame = function() {
+            if (catcherInstance) catcherInstance.remove();
+            catcherInstance = new p5(function(p) {
+                let trayX, trayY, pizzas = [], score = 0, gameActive = false;
+
+                p.setup = function() {
+                    let canvas = p.createCanvas(400, 400);
+                    canvas.parent('catcherCanvas');
+                    trayX = p.width / 2;
+                    trayY = p.height - 20;
+                    gameActive = true;
+                };
+
+                p.draw = function() {
+                    p.background(220);
+                    if (!gameActive) {
+                        p.textAlign(p.CENTER);
+                        p.textSize(20);
+                        p.text("Press Start to Play", p.width / 2, p.height / 2);
+                        p.noLoop();
+                        return;
+                    }
+
+                    p.fill(139, 69, 19);
+                    p.rect(trayX - 30, trayY - 10, 60, 10);
+
+                    if (p.frameCount % 60 === 0) {
+                        pizzas.push({ x: p.random(20, p.width - 20), y: 0 });
+                    }
+
+                    for (let i = pizzas.length - 1; i >= 0; i--) {
+                        let pizza = pizzas[i];
+                        pizza.y += 3;
+                        p.fill(255, 204, 0);
+                        p.ellipse(pizza.x, pizza.y, 20, 20);
+                        if (pizza.y > trayY - 15 && pizza.y < trayY + 15 && pizza.x > trayX - 30 && pizza.x < trayX + 30) {
+                            score++;
+                            pizzas.splice(i, 1);
+                        } else if (pizza.y > p.height) {
+                            pizzas.splice(i, 1);
+                        }
+                    }
+
+                    p.textSize(16);
+                    p.fill(0);
+                    p.textAlign(p.LEFT);
+                    p.text("Score: " + score, 10, 30);
+
+                    if (p.keyIsDown(p.LEFT_ARROW)) {
+                        trayX = p.max(30, trayX - 5);
+                    }
+                    if (p.keyIsDown(p.RIGHT_ARROW)) {
+                        trayX = p.min(p.width - 30, trayX + 5);
+                    }
+                };
+            }, 'catcherCanvas');
+        };
+
+        // Pizza Memory Match Game
+        let memoryInstance;
+        let startMemoryGame = function() {
+            if (memoryInstance) memoryInstance.remove();
+            memoryInstance = new p5(function(p) {
+                let cards = [], flipped = [], matches = 0, gameActive = false;
+
+                p.setup = function() {
+                    let canvas = p.createCanvas(400, 400);
+                    canvas.parent('memoryCanvas');
+                    let toppings = ['Pepperoni', 'Mushroom', 'Pepper', 'Olive', 'Pepperoni', 'Mushroom', 'Pepper', 'Olive'];
+                    cards = toppings.map((topping, index) => ({
+                        topping,
+                        x: (index % 4) * 90 + 50,
+                        y: Math.floor(index / 4) * 90 + 50,
+                        flipped: false,
+                        matched: false
+                    })).sort(() => Math.random() - 0.5);
+                    gameActive = true;
+                };
+
+                p.draw = function() {
+                    p.background(220);
+                    if (!gameActive) {
+                        p.textAlign(p.CENTER);
+                        p.textSize(20);
+                        p.text("Press Start to Play", p.width / スタートGame Over!", p.width / 2, p.height / 2);
+                        p.noLoop();
+                        return;
+                    }
+
+                    cards.forEach(card => {
+                        if (card.matched || card.flipped) {
+                            p.fill(255, 204, 0);
+                            p.ellipse(card.x, card.y, 80, 80);
+                            p.fill(0);
+                            p.textAlign(p.CENTER, p.CENTER);
+                            p.textSize(12);
+                            p.text(card.topping, card.x, card.y);
+                        } else {
+                            p.fill(139, 69, 19);
+                            p.ellipse(card.x, card.y, 80, 80);
+                        }
+                    });
+
+                    p.textSize(16);
+                    p.fill(0);
+                    p.textAlign(p.LEFT);
+                    p.text("Matches: " + matches + "/4", 10, 30);
+
+                    if (matches === 4) {
+                        p.textAlign(p.CENTER);
+                        p.textSize(20);
+                        p.text("You Win!", p.width / 2, p.height / 2);
+                        p.noLoop();
+                    }
+                };
+
+                p.mousePressed = function() {
+                    if (!gameActive) return;
+                    for (let card of cards) {
+                        if (!card.flipped && !card.matched && p.dist(p.mouseX, p.mouseY, card.x, card.y) < 40) {
+                            card.flipped = true;
+                            flipped.push(card);
+                            if (flipped.length === 2) {
+                                if (flipped[0].topping === flipped[1].topping) {
+                                    flipped[0].matched = true;
+                                    flipped[1].matched = true;
+                                    matches++;
+                                } else {
+                                    setTimeout(() => {
+                                        flipped[0].flipped = false;
+                                        flipped[1].flipped = false;
+                                        flipped = [];
+                                        p.redraw();
+                                    }, 1000);
+                                }
+                                flipped = [];
+                            }
+                            break;
+                        }
+                    }
+                };
+            }, 'memoryCanvas');
+        };
+
+        // Pizza Toss Game
+        let tossInstance;
+        let startTossGame = function() {
+            if (tossInstance) tossInstance.remove();
+            tossInstance = new p5(function(p) {
+                let doughSize = 50, velocity = 0, score = 0, tears = 0, gameActive = false;
+
+                p.setup = function() {
+                    let canvas = p.createCanvas(400, 400);
+                    canvas.parent('tossCanvas');
+                    gameActive = true;
+                };
+
+                p.draw = function() {
+                    p.background(220);
+                    if (!gameActive) {
+                        p.textAlign(p.CENTER);
+                        p.textSize(20);
+                        p.text("Press Start to Play", p.width / 2, p.height / 2);
+                        p.noLoop();
+                        return;
+                    }
+
+                    p.fill(245, 222, 179);
+                    p.ellipse(p.width / 2, p.height / 2, doughSize, doughSize);
+
+                    doughSize += velocity;
+                    velocity *= 0.95;
+
+                    if (doughSize > 200) {
+                        tears++;
+                        doughSize = 50;
+                        velocity = 0;
+                    }
+
+                    p.textSize(16);
+                    p.fill(0);
+                    p.textAlign(p.LEFT);
+                    p.text("Score: " + score, 10, 30);
+                    p.text("Tears: " + tears, 10, 50);
+
+                    if (tears >= 3) {
+                        p.textAlign(p.CENTER);
+                        p.textSize(20);
+                        p.text("Game Over!", p.width / 2, p.height / 2);
+                        p.noLoop();
+                    }
+                };
+
+                p.keyPressed = function() {
+                    if (!gameActive) return;
+                    if (p.keyCode === 32) {
+                        velocity += 5;
+                        score++;
+                    }
+                };
+            }, 'tossCanvas');
+        };
+    </script>
+</body>
+</html>
